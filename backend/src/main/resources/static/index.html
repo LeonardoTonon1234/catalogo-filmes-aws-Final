@@ -158,10 +158,21 @@ footer p {
   border-radius: 6px;
 }
 
+/* remove setas do campo numérico */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] { 
+  -moz-appearance: textfield;
+}
+
 .modal-buttons {
   margin-top: 12px;
   display: flex;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .btn-cancel {
@@ -177,6 +188,15 @@ footer p {
   background: var(--vermelho);
   color: #fff;
   border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-clear {
+  background: #f4f4f4;
+  border: 1px solid #aaa;
   border-radius: 6px;
   padding: 10px 16px;
   cursor: pointer;
@@ -217,6 +237,7 @@ footer p {
       <input id="anoLancamento" type="number" placeholder="Ano" required />
       <input id="avaliacao" type="number" step="0.1" placeholder="Avaliação" required />
       <div class="modal-buttons">
+        <button class="btn-clear" id="clearFields">Limpar</button>
         <button class="btn-cancel" id="closeModal">Cancelar</button>
         <button class="btn-save" id="saveFilme">Salvar</button>
       </div>
@@ -252,8 +273,10 @@ footer p {
           `;
           filmesEl.appendChild(card);
         });
+        return filmes;
       } catch (error) {
         statusEl.textContent = "Erro ao carregar filmes.";
+        return [];
       }
     }
 
@@ -261,11 +284,18 @@ footer p {
     const openModal = document.getElementById("openModal");
     const closeModal = document.getElementById("closeModal");
     const saveFilme = document.getElementById("saveFilme");
+    const clearFields = document.getElementById("clearFields");
 
     openModal.onclick = () => (modal.style.display = "flex");
     closeModal.onclick = () => (modal.style.display = "none");
-    window.onclick = (e) => {
-      if (e.target === modal) modal.style.display = "none";
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+    clearFields.onclick = () => {
+      document.getElementById("titulo").value = "";
+      document.getElementById("diretor").value = "";
+      document.getElementById("genero").value = "";
+      document.getElementById("anoLancamento").value = "";
+      document.getElementById("avaliacao").value = "";
     };
 
     saveFilme.onclick = async () => {
@@ -277,6 +307,13 @@ footer p {
 
       if (!titulo || !diretor || !genero || !anoLancamento || !avaliacao) {
         alert("Por favor, preencha todos os campos antes de salvar!");
+        return;
+      }
+
+      const filmesExistentes = await carregarFilmes();
+      const duplicado = filmesExistentes.some(f => f.titulo.toLowerCase() === titulo.toLowerCase());
+      if (duplicado) {
+        alert("Esse filme já está cadastrado!");
         return;
       }
 
