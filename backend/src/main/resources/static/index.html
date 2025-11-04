@@ -13,110 +13,216 @@
       --borda: #ddd;
     }
 
-* { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
-  background: var(--fundo);
-  color: var(--texto);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
+      background: var(--fundo);
+      color: var(--texto);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-header {
-  background: var(--vermelho);
-  color: #fff;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,.2);
-}
+    header {
+      background: var(--vermelho);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
 
-header h1 { margin: 0; font-size: 20px; }
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
 
-.btn-add {
-  background: #fff; color: var(--vermelho);
-  border: none; border-radius: 6px;
-  padding: 10px 16px; cursor: pointer; font-weight: 600;
-}
-.btn-add:hover { background: #f4f4f4; }
+    .btn-add {
+      background: #fff;
+      color: var(--vermelho);
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-main {
-  flex: 1;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 24px;
-}
+    .btn-add:hover {
+      background: #f4f4f4;
+    }
 
-.status { color: #555; margin-bottom: 20px; }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
 
-.filmes {
-  display: flex; flex-direction: column; gap: 16px;
-  width: 100%; max-width: 700px;
-}
+    .status {
+      color: #555;
+      margin-bottom: 20px;
+    }
 
-.card {
-  display: flex; align-items: center;
-  background: #fff; border: 1px solid var(--borda);
-  border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,.1);
-  overflow: hidden;
-}
+    .filmes {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 700px;
+    }
 
-.avatar {
-  background: var(--vermelho); color: #fff; font-weight: bold; font-size: 18px;
-  display: flex; align-items: center; justify-content: center;
-  width: 60px; height: 60px;
-}
+    .card {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      justify-content: space-between;
+      padding-right: 12px;
+    }
 
-.detalhes { padding: 10px 16px; flex: 1; }
-.detalhes strong { display: block; font-size: 15px; margin-bottom: 4px; }
+    .avatar {
+      background: var(--vermelho);
+      color: #fff;
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+    }
 
-footer {
-  background: var(--vermelho-escuro); color: #fff; text-align: center;
-  padding: 16px; margin-top: auto;
-}
-footer h4 { margin: 0 0 8px; }
-footer p { margin: 0; font-size: 14px; line-height: 1.6; }
+    .detalhes {
+      padding: 10px 16px;
+      flex: 1;
+    }
 
-/* Modal */
-.modal {
-  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,.5); align-items: center; justify-content: center; z-index: 100;
-}
-.modal-content {
-  background: #fff; padding: 24px; border-radius: 10px;
-  width: 100%; max-width: 400px; text-align: center;
-}
-.modal-content input {
-  width: 100%; margin: 8px 0; padding: 10px;
-  border: 1px solid var(--borda); border-radius: 6px;
-}
+    .detalhes strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
 
-/* remove setas do input number (Chrome + Firefox + Safari) */
-input[type=number] {
-  appearance: textfield;
-  -moz-appearance: textfield;
-  -webkit-appearance: textfield;
-}
+    .btn-delete {
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
 
-.modal-buttons {
-  margin-top: 12px; display: flex; justify-content: space-between; gap: 8px;
-}
-.btn-cancel {
-  background: #ccc; border: none; border-radius: 6px;
-  padding: 10px 16px; cursor: pointer; font-weight: 600;
-}
-.btn-save {
-  background: var(--vermelho); color: #fff; border: none; border-radius: 6px;
-  padding: 10px 16px; cursor: pointer; font-weight: 600;
-}
-.btn-clear {
-  background: #f4f4f4; border: 1px solid #aaa; border-radius: 6px;
-  padding: 10px 16px; cursor: pointer; font-weight: 600;
-}
-.btn-save:hover { background: var(--vermelho-escuro); }
+    .btn-delete:hover {
+      background: #cc0000;
+    }
+
+    footer {
+      background: var(--vermelho-escuro);
+      color: #fff;
+      text-align: center;
+      padding: 16px;
+      margin-top: auto;
+    }
+
+    footer h4 {
+      margin: 0 0 8px;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 24px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-content input {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+    }
+
+    /* remove setas do campo numérico */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      appearance: textfield;
+    }
+
+    .modal-buttons {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-cancel {
+      background: #ccc;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-save {
+      background: var(--vermelho);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-clear {
+      background: #f4f4f4;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-save:hover {
+      background: var(--vermelho-escuro);
+    }
   </style>
 </head>
 <body>
@@ -158,27 +264,20 @@ input[type=number] {
   <script>
     const filmesEl = document.getElementById("filmes");
     const statusEl = document.getElementById("status");
-    let filmesCache = [];
-
-    function inicial(titulo) {
-      if (!titulo || typeof titulo !== "string" || titulo.length === 0) return "-";
-      return titulo.charAt(0).toUpperCase();
-    }
 
     async function carregarFilmes() {
       try {
         const res = await fetch("/filmes");
         const filmes = await res.json();
-        filmesCache = Array.isArray(filmes) ? filmes : [];
 
-        statusEl.textContent = `Foram encontrados ${filmesCache.length} filme(s).`;
+        statusEl.textContent = `Foram encontrados ${filmes.length} filme(s).`;
         filmesEl.innerHTML = "";
 
-        filmesCache.forEach((f) => {
+        filmes.forEach((f) => {
           const card = document.createElement("div");
           card.className = "card";
           card.innerHTML = `
-            <div class="avatar">${inicial(f.titulo)}</div>
+            <div class="avatar">${f.titulo?.charAt(0).toUpperCase() || "-"}</div>
             <div class="detalhes">
               <strong>${f.titulo || "Sem título"}</strong>
               <span>${f.diretor || "Diretor desconhecido"}</span><br>
@@ -188,12 +287,29 @@ input[type=number] {
                 Avaliação: ${f.avaliacao || "-"}
               </small>
             </div>
+            <button class="btn-delete" onclick="deletarFilme(${f.id})">Excluir</button>
           `;
           filmesEl.appendChild(card);
         });
-      } catch {
+        return filmes;
+      } catch (error) {
         statusEl.textContent = "Erro ao carregar filmes.";
-        filmesCache = [];
+        return [];
+      }
+    }
+
+    async function deletarFilme(id) {
+      if (!confirm("Tem certeza que deseja excluir este filme?")) return;
+
+      try {
+        const res = await fetch(`/filmes/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          await carregarFilmes();
+        } else {
+          alert("Erro ao deletar o filme.");
+        }
+      } catch {
+        alert("Erro na conexão com o servidor.");
       }
     }
 
@@ -219,35 +335,28 @@ input[type=number] {
       const titulo = document.getElementById("titulo").value.trim();
       const diretor = document.getElementById("diretor").value.trim();
       const genero = document.getElementById("genero").value.trim();
-      const anoStr = document.getElementById("anoLancamento").value.trim();
-      const avalStr = document.getElementById("avaliacao").value.trim();
+      const anoLancamento = document.getElementById("anoLancamento").value.trim();
+      const avaliacao = document.getElementById("avaliacao").value.trim();
 
-      if (!titulo || !diretor || !genero || !anoStr || !avalStr) {
+      if (!titulo || !diretor || !genero || !anoLancamento || !avaliacao) {
         alert("Por favor, preencha todos os campos antes de salvar!");
         return;
       }
 
-      const ano = parseInt(anoStr, 10);
-      const avaliacao = parseFloat(avalStr);
-
-      if (Number.isNaN(ano) || ano < 1878 || ano > 2100) {
-        alert("Informe um ano válido (entre 1878 e 2100).");
-        return;
-      }
-      if (Number.isNaN(avaliacao) || avaliacao < 0 || avaliacao > 10) {
-        alert("Informe uma avaliação entre 0 e 10.");
-        return;
-      }
-
-      const duplicado = filmesCache.some(
-        f => (f.titulo || "").toLowerCase() === titulo.toLowerCase()
-      );
+      const filmesExistentes = await carregarFilmes();
+      const duplicado = filmesExistentes.some(f => f.titulo.toLowerCase() === titulo.toLowerCase());
       if (duplicado) {
         alert("Esse filme já está cadastrado!");
         return;
       }
 
-      const filme = { titulo, diretor, genero, anoLancamento: ano, avaliacao };
+      const filme = {
+        titulo,
+        diretor,
+        genero,
+        anoLancamento: parseInt(anoLancamento),
+        avaliacao: parseFloat(avaliacao)
+      };
 
       try {
         const res = await fetch("/filmes", {
