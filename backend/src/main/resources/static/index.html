@@ -28,11 +28,12 @@ body {
 header {
   background: var(--vermelho);
   color: #fff;
-  padding: 12px 24px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
@@ -40,15 +41,17 @@ header h1 {
   font-size: 18px;
   margin: 0;
   flex: 1;
+  white-space: nowrap;
 }
 
 .header-right {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
-#searchInput {
+#searchInput, #genreSelect {
   padding: 8px 10px;
   border-radius: 6px;
   border: none;
@@ -56,7 +59,19 @@ header h1 {
   font-size: 14px;
 }
 
-.btn-search, .btn-clear {
+#genreSelect {
+  background: #fff;
+  color: var(--vermelho);
+  font-weight: 600;
+}
+
+label {
+  font-weight: bold;
+  margin-right: 4px;
+  color: #fff;
+}
+
+.btn-search, .btn-clear, .btn-add {
   background: #fff;
   color: var(--vermelho);
   border: none;
@@ -68,19 +83,7 @@ header h1 {
 
 .btn-clear { background: #f4f4f4; color: #555; }
 .btn-clear:hover { background: #e2e2e2; }
-.btn-search:hover { background: #f4f4f4; }
-
-.btn-add {
-  background: #fff;
-  color: var(--vermelho);
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-add:hover { background: #f4f4f4; }
+.btn-search:hover, .btn-add:hover { background: #f4f4f4; }
 
 main {
   flex: 1;
@@ -190,13 +193,6 @@ footer p { margin: 0; font-size: 14px; line-height: 1.6; }
   border-radius: 6px;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number] { -moz-appearance: textfield; }
-
 .modal-buttons {
   margin-top: 12px;
   display: flex;
@@ -222,22 +218,30 @@ input[type=number] { -moz-appearance: textfield; }
   cursor: pointer;
   font-weight: 600;
 }
-
-.btn-clear {
-  background: #f4f4f4;
-  border: 1px solid #aaa;
-  border-radius: 6px;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-weight: 600;
-}
   </style>
 </head>
 <body>
   <header>
     <h1>Catálogo de Filmes - Mackenzie Edition</h1>
     <div class="header-right">
-      <input id="searchInput" type="text" placeholder="Buscar por nome ou gênero..." />
+      <input id="searchInput" type="text" placeholder="Buscar por nome..." />
+      <label for="genreSelect">Gêneros:</label>
+      <select id="genreSelect">
+        <option value="">Todos</option>
+        <option>Ação</option>
+        <option>Aventura</option>
+        <option>Comédia</option>
+        <option>Drama</option>
+        <option>Ficção Científica</option>
+        <option>Romance</option>
+        <option>Terror</option>
+        <option>Animação</option>
+        <option>Suspense</option>
+        <option>Fantasia</option>
+        <option>Musical</option>
+        <option>Guerra</option>
+        <option>Documentário</option>
+      </select>
       <button class="btn-search" id="searchBtn">Buscar</button>
       <button class="btn-clear" id="clearSearch">Limpar</button>
       <button class="btn-add" id="openModal">Adicionar Filme</button>
@@ -267,7 +271,6 @@ input[type=number] { -moz-appearance: textfield; }
       <input id="anoLancamento" type="number" placeholder="Ano" required />
       <input id="avaliacao" type="number" step="0.1" placeholder="Avaliação" required />
       <div class="modal-buttons">
-        <button class="btn-clear" id="clearFields">Limpar</button>
         <button class="btn-cancel" id="closeModal">Cancelar</button>
         <button class="btn-save" id="saveFilme">Salvar</button>
       </div>
@@ -280,12 +283,11 @@ input[type=number] { -moz-appearance: textfield; }
     const searchInput = document.getElementById("searchInput");
     const searchBtn = document.getElementById("searchBtn");
     const clearSearch = document.getElementById("clearSearch");
+    const genreSelect = document.getElementById("genreSelect");
     const modal = document.getElementById("modal");
     const openModal = document.getElementById("openModal");
     const closeModal = document.getElementById("closeModal");
     const saveFilme = document.getElementById("saveFilme");
-    const clearFields = document.getElementById("clearFields");
-    const modalTitulo = document.getElementById("modalTitulo");
     let editandoId = null;
     let filmesCache = [];
 
@@ -324,23 +326,26 @@ input[type=number] { -moz-appearance: textfield; }
       });
     }
 
-    searchBtn.onclick = () => filtrarFilmes();
-    searchInput.onkeypress = (e) => { if (e.key === "Enter") filtrarFilmes(); };
-    clearSearch.onclick = () => { searchInput.value = ""; renderizarFilmes(filmesCache); };
-
     function filtrarFilmes() {
       const termo = searchInput.value.trim().toLowerCase();
-      if (!termo) { renderizarFilmes(filmesCache); return; }
+      const genero = genreSelect.value.trim().toLowerCase();
+
       const filtrados = filmesCache.filter(f =>
-        f.titulo.toLowerCase().includes(termo) || f.genero.toLowerCase().includes(termo)
+        (termo === "" || f.titulo.toLowerCase().includes(termo)) &&
+        (genero === "" || f.genero.toLowerCase() === genero)
       );
+
       renderizarFilmes(filtrados);
     }
 
-    openModal.onclick = () => { modal.style.display = "flex"; modalTitulo.textContent = "Adicionar Novo Filme"; editandoId = null; clearCampos(); };
+    searchBtn.onclick = filtrarFilmes;
+    genreSelect.onchange = filtrarFilmes;
+    searchInput.onkeypress = (e) => { if (e.key === "Enter") filtrarFilmes(); };
+    clearSearch.onclick = () => { searchInput.value = ""; genreSelect.value = ""; renderizarFilmes(filmesCache); };
+
+    openModal.onclick = () => { modal.style.display = "flex"; editandoId = null; clearCampos(); };
     closeModal.onclick = () => (modal.style.display = "none");
     window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
-    clearFields.onclick = clearCampos;
 
     function clearCampos() {
       document.getElementById("titulo").value = "";
@@ -354,7 +359,6 @@ input[type=number] { -moz-appearance: textfield; }
       const res = await fetch(`/filmes/${id}`);
       const filme = await res.json();
       editandoId = id;
-      modalTitulo.textContent = "Editar Filme";
       document.getElementById("titulo").value = filme.titulo;
       document.getElementById("diretor").value = filme.diretor;
       document.getElementById("genero").value = filme.genero;
@@ -386,12 +390,10 @@ input[type=number] { -moz-appearance: textfield; }
         return;
       }
       const filme = { titulo, diretor, genero, anoLancamento: parseInt(anoLancamento), avaliacao: parseFloat(avaliacao) };
-      try {
-        const metodo = editandoId ? "PUT" : "POST";
-        const url = editandoId ? `/filmes/${editandoId}` : "/filmes";
-        const res = await fetch(url, { method: metodo, headers: { "Content-Type": "application/json" }, body: JSON.stringify(filme) });
-        if (res.ok) { modal.style.display = "none"; await carregarFilmes(); } else alert("Erro ao salvar filme.");
-      } catch { alert("Erro na conexão com o servidor."); }
+      const metodo = editandoId ? "PUT" : "POST";
+      const url = editandoId ? `/filmes/${editandoId}` : "/filmes";
+      const res = await fetch(url, { method: metodo, headers: { "Content-Type": "application/json" }, body: JSON.stringify(filme) });
+      if (res.ok) { modal.style.display = "none"; await carregarFilmes(); } else alert("Erro ao salvar filme.");
     };
 
     carregarFilmes();
