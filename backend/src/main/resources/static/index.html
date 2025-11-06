@@ -5,379 +5,257 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catálogo de Filmes - Mackenzie Edition</title>
   <style>
-    :root {
-      --vermelho: #c8102e;
-      --vermelho-escuro: #9a0d22;
-      --fundo: #fafafa;
-      --texto: #222;
-      --borda: #ddd;
-    }
-    * { box-sizing: border-box; }
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
-      background: var(--fundo);
-      color: var(--texto);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      padding: 0;
+      background-color: #f8f8f8;
     }
+
     header {
-      background: var(--vermelho);
-      color: #fff;
-      padding: 10px 20px;
+      background-color: #a7001e;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .filmes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .filme {
+      background-color: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .filme h3 {
+      margin-top: 0;
+      color: #a7001e;
+    }
+
+    .botoes {
+      margin-top: 10px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    header h1 {
-      font-size: 18px;
-      margin: 0;
-      flex: 1;
-      white-space: nowrap;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    #searchInput, #genreSelect {
-      padding: 8px 10px;
-      border-radius: 6px;
+
+    button {
+      background-color: #a7001e;
+      color: white;
       border: none;
-      outline: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #800019;
+    }
+
+    footer {
+      background-color: #a7001e;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
       font-size: 14px;
     }
-    #genreSelect {
-      background: #fff;
-      color: var(--vermelho);
-      font-weight: 600;
-    }
-    label {
-      font-weight: bold;
-      margin-right: 4px;
-      color: #fff;
-    }
-    .btn-search, .btn-add {
-      background: #fff;
-      color: var(--vermelho);
-      border: none;
-      border-radius: 6px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn-search:hover, .btn-add:hover { background: #f4f4f4; }
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px;
-    }
-    .status { color: #555; margin-bottom: 20px; }
-    .filmes {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      width: 100%;
-      max-width: 700px;
-    }
-    .card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #fff;
-      border: 1px solid var(--borda);
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
-      padding-right: 10px;
-    }
-    .avatar {
-      background: var(--vermelho);
-      color: #fff;
-      font-weight: bold;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 60px;
-      height: 60px;
-    }
-    .detalhes {
-      padding: 10px 16px;
-      flex: 1;
-    }
-    .detalhes strong { display: block; font-size: 15px; margin-bottom: 4px; }
-    .acoes {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .btn-acao {
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-weight: 600;
-      color: #fff;
-    }
-    .btn-editar { background: #1976d2; }
-    .btn-editar:hover { background: #125ca2; }
-    .btn-excluir { background: #d32f2f; }
-    .btn-excluir:hover { background: #9a1f1f; }
-    footer {
-      background: var(--vermelho-escuro);
-      color: #fff;
-      text-align: center;
-      padding: 16px;
-      margin-top: auto;
-    }
-    footer h4 { margin: 0 0 8px; }
-    footer p { margin: 0; font-size: 14px; line-height: 1.6; }
-    .modal {
+
+    #modal {
       display: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      align-items: center;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
       justify-content: center;
-      z-index: 100;
+      align-items: center;
     }
-    .modal-content {
-      background: #fff;
-      padding: 24px;
-      border-radius: 10px;
+
+    #modal form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+    }
+
+    #modal input {
       width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-    .modal-content input {
-      width: 100%;
-      margin: 8px 0;
-      padding: 10px;
-      border: 1px solid var(--borda);
-      border-radius: 6px;
-    }
-    .modal-buttons {
-      margin-top: 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .btn-cancel {
-      background: #ccc;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 16px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn-save {
-      background: var(--vermelho);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 16px;
-      cursor: pointer;
-      font-weight: 600;
+      padding: 8px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Catálogo de Filmes - Mackenzie Edition</h1>
-    <div class="header-right">
-      <input id="searchInput" type="text" placeholder="Buscar por nome..." />
-      <label for="genreSelect">Gêneros:</label>
-      <select id="genreSelect">
-        <option value="">Todos</option>
-        <option>Ação</option>
-        <option>Aventura</option>
-        <option>Comédia</option>
-        <option>Drama</option>
-        <option>Ficção Científica</option>
-        <option>Romance</option>
-        <option>Terror</option>
-        <option>Animação</option>
-        <option>Suspense</option>
-        <option>Fantasia</option>
-        <option>Musical</option>
-        <option>Guerra</option>
-        <option>Documentário</option>
-      </select>
-      <button class="btn-search" id="searchBtn">Buscar</button>
-      <button class="btn-add" id="openModal">Adicionar Filme</button>
-    </div>
+    Catálogo de Filmes - Mackenzie Edition
+    <button style="float: right;" onclick="abrirModal()">Adicionar Filme</button>
   </header>
 
   <main>
-    <div class="status" id="status">Carregando filmes...</div>
-    <div class="filmes" id="filmes"></div>
+    <div id="filmes" class="filmes"></div>
   </main>
 
   <footer>
-    <h4>PROJETO DE NUVENS</h4>
-    <p>
-      Leonardo De Castro Tonon<br />
-      João Pedro Fernandes Milhomens<br />
-      Marcel Nobrega Zamboni
-    </p>
+    <strong>PROJETO DE NUVENS</strong><br />
+    Leonardo De Castro Tonon<br />
+    João Pedro Fernandes Milhomens<br />
+    Marcel Nobrega Zamboni
   </footer>
 
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <h3 id="modalTitulo">Adicionar Novo Filme</h3>
-      <input id="titulo" type="text" placeholder="Título" required />
-      <input id="diretor" type="text" placeholder="Diretor" required />
-      <input id="genero" type="text" placeholder="Gênero" required />
-      <input id="anoLancamento" type="number" placeholder="Ano" required />
-      <input id="avaliacao" type="number" step="0.1" placeholder="Avaliação" required />
-      <div class="modal-buttons">
-        <button class="btn-cancel" id="closeModal">Cancelar</button>
-        <button class="btn-save" id="saveFilme">Salvar</button>
-      </div>
-    </div>
+  <div id="modal">
+    <form id="formFilme" onsubmit="salvarFilme(event)">
+      <h3 id="modalTitulo">Adicionar Filme</h3>
+      <input type="text" id="titulo" placeholder="Título" required />
+      <input type="text" id="diretor" placeholder="Diretor" required />
+      <input type="text" id="genero" placeholder="Gênero" required />
+      <input type="number" id="anoLancamento" placeholder="Ano de Lançamento" required />
+      <input type="number" step="0.1" id="avaliacao" placeholder="Avaliação (0-10)" required />
+      <button type="submit">Salvar</button>
+      <button type="button" onclick="fecharModal()">Cancelar</button>
+    </form>
   </div>
 
   <script>
-    // ✅ Endpoint da API Gateway
-    const API_URL = "https://7itkaw7gz0.execute-api.us-east-1.amazonaws.com/prod";
+    // ✅ URL do backend rodando na EC2
+    const API_URL = "http://54.198.176.65:8080";
 
-    const filmesEl = document.getElementById("filmes");
-    const statusEl = document.getElementById("status");
-    const searchInput = document.getElementById("searchInput");
-    const searchBtn = document.getElementById("searchBtn");
-    const genreSelect = document.getElementById("genreSelect");
+    const filmesDiv = document.getElementById("filmes");
     const modal = document.getElementById("modal");
-    const openModal = document.getElementById("openModal");
-    const closeModal = document.getElementById("closeModal");
-    const saveFilme = document.getElementById("saveFilme");
-    let editandoId = null;
+    const form = document.getElementById("formFilme");
     let filmesCache = [];
+    let editandoId = null;
 
-    async function carregarFilmes() {
+    // Carrega filmes do backend
+    const carregarFilmes = async () => {
       try {
         const res = await fetch(`${API_URL}/filmes`);
-        filmesCache = await res.json();
-        renderizarFilmes(filmesCache);
-      } catch {
-        statusEl.textContent = "Erro ao carregar filmes.";
+        if (!res.ok) throw new Error("Erro ao buscar filmes");
+        const filmes = await res.json();
+        filmesCache = filmes;
+        exibirFilmes(filmes);
+      } catch (err) {
+        filmesDiv.innerHTML = "<p>Erro ao carregar filmes.</p>";
       }
-    }
+    };
 
-    function renderizarFilmes(filmes) {
-      filmesEl.innerHTML = "";
-      if (filmes.length === 0) {
-        statusEl.textContent = "Nenhum filme encontrado.";
-        return;
-      }
-      statusEl.textContent = `Foram encontrados ${filmes.length} filme(s).`;
+    // Exibe filmes na tela
+    const exibirFilmes = (filmes) => {
+      filmesDiv.innerHTML = "";
       filmes.forEach((f) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <div class="avatar">${f.titulo?.charAt(0).toUpperCase() || "-"}</div>
-          <div class="detalhes">
-            <strong>${f.titulo}</strong>
-            <span>${f.diretor}</span><br>
-            <small>Gênero: ${f.genero} &nbsp;&nbsp; Ano: ${f.anoLancamento} &nbsp;&nbsp; Avaliação: ${f.avaliacao}</small>
+        const div = document.createElement("div");
+        div.className = "filme";
+        div.innerHTML = `
+          <h3>${f.titulo}</h3>
+          <p><strong>Diretor:</strong> ${f.diretor}</p>
+          <p><strong>Gênero:</strong> ${f.genero}</p>
+          <p><strong>Ano:</strong> ${f.anoLancamento}</p>
+          <p><strong>Avaliação:</strong> ${f.avaliacao}</p>
+          <div class="botoes">
+            <button onclick="editarFilme(${f.id})">Editar</button>
+            <button onclick="deletarFilme(${f.id})">Excluir</button>
           </div>
-          <div class="acoes">
-            <button class="btn-acao btn-editar" onclick="editarFilme(${f.id})">Editar</button>
-            <button class="btn-acao btn-excluir" onclick="deletarFilme(${f.id})">Excluir</button>
-          </div>`;
-        filmesEl.appendChild(card);
+        `;
+        filmesDiv.appendChild(div);
       });
-    }
+    };
 
-    function filtrarFilmes() {
-      const termo = searchInput.value.trim().toLowerCase();
-      const genero = genreSelect.value.trim().toLowerCase();
-
-      const filtrados = filmesCache.filter(f =>
-        (termo === "" || f.titulo.toLowerCase().includes(termo)) &&
-        (genero === "" || f.genero.toLowerCase().includes(genero))
-      );
-
-      renderizarFilmes(filtrados);
-    }
-
-    searchBtn.onclick = filtrarFilmes;
-    genreSelect.onchange = filtrarFilmes;
-
-    searchInput.addEventListener("input", () => {
-      const termo = searchInput.value.trim();
-      if (termo === "") carregarFilmes();
-      else filtrarFilmes();
-    });
-
-    searchInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") filtrarFilmes();
-    });
-
-    openModal.onclick = () => { modal.style.display = "flex"; editandoId = null; clearCampos(); };
-    closeModal.onclick = () => (modal.style.display = "none");
-    window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
-
-    function clearCampos() {
-      document.getElementById("titulo").value = "";
-      document.getElementById("diretor").value = "";
-      document.getElementById("genero").value = "";
-      document.getElementById("anoLancamento").value = "";
-      document.getElementById("avaliacao").value = "";
-    }
-
-    async function editarFilme(id) {
-      const res = await fetch(`${API_URL}/filmes/${id}`);
-      const filme = await res.json();
-      editandoId = id;
-      document.getElementById("titulo").value = filme.titulo;
-      document.getElementById("diretor").value = filme.diretor;
-      document.getElementById("genero").value = filme.genero;
-      document.getElementById("anoLancamento").value = filme.anoLancamento;
-      document.getElementById("avaliacao").value = filme.avaliacao;
+    // Abre modal para novo filme
+    const abrirModal = () => {
+      form.reset();
+      editandoId = null;
+      document.getElementById("modalTitulo").innerText = "Adicionar Filme";
       modal.style.display = "flex";
-    }
+    };
 
-    async function deletarFilme(id) {
-      if (confirm("Tem certeza que deseja excluir este filme?")) {
-        await fetch(`${API_URL}/filmes/${id}`, { method: "DELETE" });
-        await carregarFilmes();
-        searchInput.value = "";
-        genreSelect.value = "";
-      }
-    }
+    const fecharModal = () => {
+      modal.style.display = "none";
+    };
 
-    saveFilme.onclick = async () => {
+    // Editar filme existente
+    const editarFilme = (id) => {
+      const f = filmesCache.find((f) => f.id === id);
+      if (!f) return;
+      editandoId = id;
+      document.getElementById("modalTitulo").innerText = "Editar Filme";
+      document.getElementById("titulo").value = f.titulo;
+      document.getElementById("diretor").value = f.diretor;
+      document.getElementById("genero").value = f.genero;
+      document.getElementById("anoLancamento").value = f.anoLancamento;
+      document.getElementById("avaliacao").value = f.avaliacao;
+      modal.style.display = "flex";
+    };
+
+    // Deletar filme
+    const deletarFilme = async (id) => {
+      if (!confirm("Tem certeza que deseja excluir este filme?")) return;
+      await fetch(`${API_URL}/filmes/${id}`, { method: "DELETE" });
+      await carregarFilmes();
+    };
+
+    // Salvar (POST/PUT)
+    const salvarFilme = async (e) => {
+      e.preventDefault();
       const titulo = document.getElementById("titulo").value.trim();
       const diretor = document.getElementById("diretor").value.trim();
       const genero = document.getElementById("genero").value.trim();
       const anoLancamento = document.getElementById("anoLancamento").value.trim();
       const avaliacao = document.getElementById("avaliacao").value.trim();
+
       if (!titulo || !diretor || !genero || !anoLancamento || !avaliacao) {
         alert("Por favor, preencha todos os campos!");
         return;
       }
-      const duplicado = filmesCache.some(f => f.titulo.toLowerCase() === titulo.toLowerCase() && f.id !== editandoId);
+
+      const duplicado = filmesCache.some(
+        (f) => f.titulo.toLowerCase() === titulo.toLowerCase() && f.id !== editandoId
+      );
       if (duplicado) {
         alert("Já existe um filme com esse título!");
         return;
       }
-      const filme = { titulo, diretor, genero, anoLancamento: parseInt(anoLancamento), avaliacao: parseFloat(avaliacao) };
+
+      const filme = {
+        titulo,
+        diretor,
+        genero,
+        anoLancamento: parseInt(anoLancamento),
+        avaliacao: parseFloat(avaliacao),
+      };
+
       const metodo = editandoId ? "PUT" : "POST";
-      const url = editandoId ? `${API_URL}/filmes/${editandoId}` : `${API_URL}/filmes`;
-      const res = await fetch(url, { method: metodo, headers: { "Content-Type": "application/json" }, body: JSON.stringify(filme) });
-      if (res.ok) { modal.style.display = "none"; await carregarFilmes(); } else alert("Erro ao salvar filme.");
+      const url = editandoId
+        ? `${API_URL}/filmes/${editandoId}`
+        : `${API_URL}/filmes`;
+
+      const res = await fetch(url, {
+        method: metodo,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filme),
+      });
+
+      if (res.ok) {
+        modal.style.display = "none";
+        await carregarFilmes();
+      } else {
+        alert("Erro ao salvar filme.");
+      }
     };
 
     carregarFilmes();
   </script>
 </body>
 </html>
+
