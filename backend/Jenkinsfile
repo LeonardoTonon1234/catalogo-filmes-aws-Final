@@ -8,6 +8,17 @@ pipeline {
             }
         }
 
+        stage('Instalar JDK') {
+            steps {
+                echo 'Instalando OpenJDK 17...'
+                sh '''
+                    apt-get update -y
+                    apt-get install -y openjdk-17-jdk
+                    java -version
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
                 dir('backend') {
@@ -20,7 +31,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('backend') {
-                    echo 'Criando imagem Docker...'
+                    echo 'Construindo imagem Docker...'
                     sh 'docker build -t catalogo-filmes .'
                 }
             }
@@ -28,10 +39,8 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                echo 'Subindo container do projeto...'
-                sh 'docker stop catalogo-filmes || true'
-                sh 'docker rm catalogo-filmes || true'
-                sh 'docker run -d -p 9090:8080 --name catalogo-filmes catalogo-filmes'
+                echo 'Executando container do catálogo de filmes...'
+                sh 'docker run -d -p 8082:8080 --name catalogo-filmes catalogo-filmes || true'
             }
         }
     }
