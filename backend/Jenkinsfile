@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'gradle:8.4-jdk17'   // Usa imagem do Gradle com JDK 17 pronto
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     stages {
         stage('Checkout') {
@@ -8,21 +13,10 @@ pipeline {
             }
         }
 
-        stage('Instalar JDK') {
-            steps {
-                echo 'Instalando OpenJDK 17...'
-                sh '''
-                    apt-get update -y
-                    apt-get install -y openjdk-17-jdk
-                    java -version
-                '''
-            }
-        }
-
         stage('Build') {
             steps {
                 dir('backend') {
-                    echo 'Executando build do projeto...'
+                    echo 'Executando build do projeto com Gradle + JDK 17...'
                     sh './gradlew clean build -x test'
                 }
             }
@@ -45,3 +39,4 @@ pipeline {
         }
     }
 }
+
