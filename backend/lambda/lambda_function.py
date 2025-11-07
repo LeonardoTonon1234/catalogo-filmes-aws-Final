@@ -1,22 +1,49 @@
 import json
-import pymysql
+import urllib.request
 
 def lambda_handler(event, context):
-    connection = pymysql.connect(
-        host='catalogofilmes-db.c762082m6il2.us-east-1.rds.amazonaws.com',
-        user='admin',
-        password='SUA_SENHA_AQUI',
-        database='catalogofilmes'
-    )
+    try:
+        # URL da sua API Gateway
+        API_URL = "https://7itkaw7gz0.execute-api.us-east-1.amazonaws.com/prod/filmes"
+        
+        # Faz requisição GET para obter os filmes
+        with urllib.request.urlopen(API_URL) as response:
+            data = response.read().decode()
+            filmes = json.loads(data)
 
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT id, titulo, diretor, genero, ano_lancamento, avaliacao FROM filmes")
-        filmes = cursor.fetchall()
+        # Calcula métricas simples
+        total = len(filmes)
+        media_avaliacao = sum(f["avaliacao"] for f in filmes) / total if total > 0 else 0
+        anos = [f["anoLancamento"] for f in filmes]
+        mais_recente = max(anos) if anos else "N/A"
+        mais_antigo = min(anos) if anos else "N/A"
 
-    connection.close()
+        # Monta o relatório
+        relatorio = {
+            "total_filmes": total,
+            "media_avaliacao": round(media_avaliacao, 2),
+            "ano_mais_recente": mais_recente,
+            "ano_mais_antigo": mais_antigo
+        }
 
-    return {
-        'statusCode': 200,
-        'body': json.dumps(filmes)
-    }
-
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "mensagem": "Relatório gerado com sucesso!",
+                "relatorio": relatorio
+            }),
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            }
+        }
+    
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"erro": str(e)}),
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            }
+        }
