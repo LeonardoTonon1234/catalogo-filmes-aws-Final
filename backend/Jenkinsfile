@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/LeonardoTonon1234/catalogo-filmes-aws-Final.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('backend') {
+                    echo 'Executando build do projeto...'
+                    sh './gradlew clean build -x test'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('backend') {
+                    echo 'Criando imagem Docker...'
+                    sh 'docker build -t catalogo-filmes .'
+                }
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                echo 'Subindo container do projeto...'
+                sh 'docker stop catalogo-filmes || true'
+                sh 'docker rm catalogo-filmes || true'
+                sh 'docker run -d -p 9090:8080 --name catalogo-filmes catalogo-filmes'
+            }
+        }
+    }
+}
