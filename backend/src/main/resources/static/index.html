@@ -129,7 +129,6 @@
   </div>
 
   <script>
-    // ✅ URL do backend rodando na EC2
     const API_URL = "http://54.198.176.65:8080";
 
     const filmesDiv = document.getElementById("filmes");
@@ -138,7 +137,6 @@
     let filmesCache = [];
     let editandoId = null;
 
-    // Carrega filmes do backend
     const carregarFilmes = async () => {
       try {
         const res = await fetch(`${API_URL}/filmes`);
@@ -146,12 +144,11 @@
         const filmes = await res.json();
         filmesCache = filmes;
         exibirFilmes(filmes);
-      } catch (err) {
+      } catch {
         filmesDiv.innerHTML = "<p>Erro ao carregar filmes.</p>";
       }
     };
 
-    // Exibe filmes na tela
     const exibirFilmes = (filmes) => {
       filmesDiv.innerHTML = "";
       filmes.forEach((f) => {
@@ -172,7 +169,6 @@
       });
     };
 
-    // Abre modal para novo filme
     const abrirModal = () => {
       form.reset();
       editandoId = null;
@@ -180,11 +176,8 @@
       modal.style.display = "flex";
     };
 
-    const fecharModal = () => {
-      modal.style.display = "none";
-    };
+    const fecharModal = () => modal.style.display = "none";
 
-    // Editar filme existente
     const editarFilme = (id) => {
       const f = filmesCache.find((f) => f.id === id);
       if (!f) return;
@@ -198,14 +191,12 @@
       modal.style.display = "flex";
     };
 
-    // Deletar filme
     const deletarFilme = async (id) => {
       if (!confirm("Tem certeza que deseja excluir este filme?")) return;
       await fetch(`${API_URL}/filmes/${id}`, { method: "DELETE" });
       await carregarFilmes();
     };
 
-    // Salvar (POST/PUT)
     const salvarFilme = async (e) => {
       e.preventDefault();
       const titulo = document.getElementById("titulo").value.trim();
@@ -213,19 +204,6 @@
       const genero = document.getElementById("genero").value.trim();
       const anoLancamento = document.getElementById("anoLancamento").value.trim();
       const avaliacao = document.getElementById("avaliacao").value.trim();
-
-      if (!titulo || !diretor || !genero || !anoLancamento || !avaliacao) {
-        alert("Por favor, preencha todos os campos!");
-        return;
-      }
-
-      const duplicado = filmesCache.some(
-        (f) => f.titulo.toLowerCase() === titulo.toLowerCase() && f.id !== editandoId
-      );
-      if (duplicado) {
-        alert("Já existe um filme com esse título!");
-        return;
-      }
 
       const filme = {
         titulo,
@@ -236,9 +214,7 @@
       };
 
       const metodo = editandoId ? "PUT" : "POST";
-      const url = editandoId
-        ? `${API_URL}/filmes/${editandoId}`
-        : `${API_URL}/filmes`;
+      const url = editandoId ? `${API_URL}/filmes/${editandoId}` : `${API_URL}/filmes`;
 
       const res = await fetch(url, {
         method: metodo,
