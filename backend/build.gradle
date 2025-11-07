@@ -9,13 +9,14 @@ version = '0.0.1-SNAPSHOT'
 description = 'Demo project for Spring Boot'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.withType(JavaCompile) {
     options.fork = true
-    options.forkOptions.executable = '/usr/lib/jvm/java-21-amazon-corretto.x86_64/bin/javac'
+    // usa o javac padrão do container (não força o Corretto)
+    options.forkOptions.executable = 'javac'
 }
 
 repositories {
@@ -33,5 +34,4 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
 
