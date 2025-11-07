@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'gradle:8.4-jdk17'   // Usa imagem do Gradle com JDK 17 pronto
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
@@ -14,6 +9,12 @@ pipeline {
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'gradle:8.4-jdk17'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 dir('backend') {
                     echo 'Executando build do projeto com Gradle + JDK 17...'
@@ -25,7 +26,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('backend') {
-                    echo 'Construindo imagem Docker...'
+                    echo 'Construindo imagem Docker (no host Jenkins)...'
                     sh 'docker build -t catalogo-filmes .'
                 }
             }
@@ -34,9 +35,12 @@ pipeline {
         stage('Run Container') {
             steps {
                 echo 'Executando container do catálogo de filmes...'
-                sh 'docker run -d -p 8082:8080 --name catalogo-filmes catalogo-filmes || true'
+                sh '''
+                    docker stop catalogo-filmes || true
+                    docker rm catalogo-filmes || true
+                    docker run -d -p 8082:8080 --name catalogo-filmes catalogo-filmes
+                '''
             }
         }
     }
 }
-
